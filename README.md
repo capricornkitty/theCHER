@@ -18,9 +18,9 @@
 
 **FILE STRUCTURE 
 📁 smart-closet-manager/
-│── 📄 closet_ui.py       # Main UI application (Tkinter)
-│── 📄 database.py        # SQLite setup & management (WIP)
-│── 📄 requirements.txt   # List of dependencies
-│── 📄 README.md          # Project documentation
-│── 📂 images/            # Store local clothing images (optional)
-└── 📄 .gitignore         # Ignore unnecessary files
+📄 closet_ui.py       # Main UI application (Tkinter)
+📄 database.py        # SQLite setup & management (WIP)
+📄 requirements.txt   # List of dependencies
+📄 README.md          # Project documentation
+📂 images/            # Store local clothing images (optional)
+📄 .gitignore         # Ignore unnecessary files
