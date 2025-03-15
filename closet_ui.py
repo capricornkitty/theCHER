@@ -68,81 +68,56 @@ def show_item_details(event):
         pass
 
 
-# Function to delete a selected item and refresh the list
 def delete_selected_item():
-    print("🛠 DEBUG: Delete button was clicked!")  # Debugging print
+    print("🛠 DEBUG: Delete button was clicked!")  
 
     try:
+        # Get the selected item index
         selected_index = clothing_list.curselection()[0]
-        print(f"🛠 DEBUG: Selected index = {selected_index}")  # Debugging print
-        
-        items = fetch_clothing_items(search_entry.get().strip())
-        if not items:
-            print("❌ ERROR: No items found in the database!")
-            return
+        print(f"🛠 DEBUG: Selected index = {selected_index}")  
 
-        item_id = items[selected_index][0]
-        print(f"🛠 DEBUG: Selected Item ID = {item_id}")  # Debugging print
+        # Fetch all items *before* filtering to ensure correct indexing
+        all_items = fetch_clothing_items("")  # Fetch all items, no filter
+
+        # Get the actual item from the full list
+        item_id = all_items[selected_index][0]  
+        print(f"🛠 DEBUG: Selected Item ID = {item_id}")  
 
         conn = sqlite3.connect("closet_inventory.db")
         cursor = conn.cursor()
 
-        # Debugging: Print all items in the database
-        cursor.execute("SELECT * FROM clothing;")
-        all_items = cursor.fetchall()
-        print(f"📋 DEBUG: Current items in database: {all_items}")
-
-        # Check if the selected item exists before deleting
+        # Verify if the item exists before deleting
         cursor.execute("SELECT * FROM clothing WHERE id=?", (item_id,))
         item_check = cursor.fetchone()
+
         if item_check:
-            print(f"🗑️ DEBUG: Deleting item: {item_check}")  # Debugging output
+            print(f"🗑️ DEBUG: Deleting item: {item_check}")  
 
-            # Delete the item
+            # Execute deletion
             cursor.execute("DELETE FROM clothing WHERE id=?", (item_id,))
-            conn.commit()
+            conn.commit()  # ✅ FIX 2: Ensure deletion is saved to the database
 
-            # Verify deletion
+            # Check if deletion was successful
             cursor.execute("SELECT * FROM clothing WHERE id=?", (item_id,))
             item_check_after = cursor.fetchone()
 
             if item_check_after:
-                print("❌ ERROR: Item was NOT deleted!")  # If item is still there, deletion failed
+                print("❌ ERROR: Item was NOT deleted!")  
             else:
-                print("✅ SUCCESS: Item deleted successfully!")  # Item is gone
+                print("✅ SUCCESS: Item deleted successfully!")  
 
         conn.close()
 
-        # Refresh the list properly
-       
-
-   
-        # Refresh the list properly
+        # ✅ FIX 3: Refresh the Listbox Properly
         clothing_list.delete(0, tk.END)  # Clear listbox
         update_clothing_list()  # Reload all items
-        details_text.set("Item deleted!")  # Update message
-        clothing_image_label.config(image="", text="No Image")  # Clear image
+        
+        # Clear details UI
+        details_text.set("Item deleted!")  
+        clothing_image_label.config(image="", text="No Image")  
+
     except IndexError:
-        print("❌ ERROR: No item was selected to delete.")  # Debug print
-        messagebox.showerror("Error", "Please select an item to delete.")
-
-
-        # Refresh the list properly
-        clothing_list.delete(0, tk.END)  # Clear listbox
-        update_clothing_list()  # Reload all items
-        details_text.set("Item deleted!")  # Update message
-        clothing_image_label.config(image="", text="No Image")  # Clear image
-    except IndexError:
-        messagebox.showerror("Error", "Please select an item to delete.")
-
-
-        # Refresh the list properly
-        search_entry.delete(0, tk.END)  # Clear search bar
-        update_clothing_list()  # Reload all items
-
-        details_text.set("Item deleted!")  # Update details text
-        clothing_image_label.config(image="", text="No Image")  # Remove image
-    except IndexError:
+        print("❌ ERROR: No item was selected to delete.")  
         messagebox.showerror("Error", "Please select an item to delete.")
 
 
