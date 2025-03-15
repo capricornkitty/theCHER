@@ -16,8 +16,8 @@
 
 ## 🖥️ Setup & Installation  
 
-**FILE STRUCTURE 
-📁 smart-closet-manager/
+## FILE STRUCTURE 
+📁 smart-closet-manager
 📄 closet_ui.py       # Main UI application (Tkinter)
 📄 database.py        # SQLite setup & management (WIP)
 📄 requirements.txt   # List of dependencies
